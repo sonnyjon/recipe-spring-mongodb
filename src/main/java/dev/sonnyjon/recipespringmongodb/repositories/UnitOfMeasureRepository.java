@@ -1,4 +1,4 @@
-package dev.sonnyjon.recipespringmongodb.repository;
+package dev.sonnyjon.recipespringmongodb.repositories;
 
 import dev.sonnyjon.recipespringmongodb.model.UnitOfMeasure;
 import org.springframework.data.mongodb.repository.MongoRepository;
