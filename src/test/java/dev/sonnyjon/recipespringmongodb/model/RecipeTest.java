@@ -4,7 +4,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.test.context.ActiveProfiles;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
@@ -24,17 +23,6 @@ class RecipeTest
     {
         recipe = new Recipe();
         recipe.setId(RECIPE_ID);
-    }
-
-    @Test
-    void setNonNullNotes_notesRecipe_shouldBeThisRecipe()
-    {
-        Notes notes = new Notes();
-        notes.setId(NOTES_ID);
-        recipe.setNotes(notes);
-
-        assertEquals(NOTES_ID, recipe.getNotes().getId());
-        assertEquals(RECIPE_ID, notes.getRecipe().getId());
     }
 
     @Test
