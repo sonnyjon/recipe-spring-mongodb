@@ -7,7 +7,7 @@ import lombok.Synchronized;
 /**
  * Created by Sonny on 7/8/2022.
  */
-public class CategoryConverter implements BiConverter<Category, CategoryDto>
+public class CategoryConverter implements DualConverter<Category, CategoryDto>
 {
     @Synchronized
     @Override

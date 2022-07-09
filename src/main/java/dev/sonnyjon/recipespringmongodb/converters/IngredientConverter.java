@@ -8,7 +8,7 @@ import dev.sonnyjon.recipespringmongodb.model.UnitOfMeasure;
 /**
  * Created by Sonny on 7/8/2022.
  */
-public class IngredientConverter implements BiConverter<Ingredient, IngredientDto>
+public class IngredientConverter implements DualConverter<Ingredient, IngredientDto>
 {
     private final UnitOfMeasureConverter uomConverter = new UnitOfMeasureConverter();
 

@@ -7,7 +7,7 @@ import lombok.Synchronized;
 /**
  * Created by Sonny on 7/8/2022.
  */
-public class UnitOfMeasureConverter implements BiConverter<UnitOfMeasure, UnitOfMeasureDto>
+public class UnitOfMeasureConverter implements DualConverter<UnitOfMeasure, UnitOfMeasureDto>
 {
     @Synchronized
     @Override

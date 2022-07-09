@@ -7,7 +7,7 @@ import lombok.Synchronized;
 /**
  * Created by Sonny on 7/8/2022.
  */
-public class NotesConverter implements BiConverter<Notes, NotesDto>
+public class NotesConverter implements DualConverter<Notes, NotesDto>
 {
     @Synchronized
     @Override
