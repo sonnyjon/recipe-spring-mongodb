@@ -15,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class CategoryConverterTest
 {
     public static final String CAT_ID = "CAT-1";
-    public static final String DESCRIPTION = "TEST_DESC";
+    public static final String DESCRIPTION = "CAT_DESC";
 
     CategoryConverter converter;
 
