@@ -4,6 +4,10 @@ import dev.sonnyjon.recipespringmongodb.dto.IngredientDto;
 import dev.sonnyjon.recipespringmongodb.dto.UnitOfMeasureDto;
 import dev.sonnyjon.recipespringmongodb.model.Ingredient;
 import dev.sonnyjon.recipespringmongodb.model.UnitOfMeasure;
+import lombok.Synchronized;
+
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Created by Sonny on 7/8/2022.
@@ -12,6 +16,30 @@ public class IngredientConverter implements DualConverter<Ingredient, Ingredient
 {
     private final UnitOfMeasureConverter uomConverter = new UnitOfMeasureConverter();
 
+
+    @Synchronized
+    public Set<IngredientDto> convertEntities(Set<Ingredient> entities)
+    {
+        if (entities == null) return null;
+
+        final Set<IngredientDto> dtos = new HashSet<>();
+        entities.forEach((Ingredient entity) -> dtos.add(convertEntity(entity)));
+
+        return dtos;
+    }
+
+    @Synchronized
+    public Set<Ingredient> convertDtos(Set<IngredientDto> dtos)
+    {
+        if (dtos == null) return null;
+
+        final Set<Ingredient> entities = new HashSet<>();
+        dtos.forEach((IngredientDto dto) -> entities.add(convertDto(dto)));
+
+        return entities;
+    }
+
+    @Synchronized
     @Override
     public IngredientDto convertEntity(Ingredient entity)
     {
@@ -27,6 +55,7 @@ public class IngredientConverter implements DualConverter<Ingredient, Ingredient
         return dto;
     }
 
+    @Synchronized
     @Override
     public Ingredient convertDto(IngredientDto dto)
     {

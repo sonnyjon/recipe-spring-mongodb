@@ -34,15 +34,11 @@ class IngredientConverterTest
     @Test
     void convertEntity_shouldReturn_equivDto()
     {
-        UnitOfMeasure uomEntity = new UnitOfMeasure();
-        uomEntity.setId(UOM_ID);
-        uomEntity.setDescription(UOM_DESC);
-
         Ingredient entity = new Ingredient();
         entity.setId(INGRED_ID);
         entity.setDescription(INGRED_DESC);
         entity.setAmount(AMOUNT);
-        entity.setUom(uomEntity);
+        entity.setUom(getTestUomEntity());
 
         IngredientDto dto = converter.convertEntity(entity);
 
@@ -56,15 +52,11 @@ class IngredientConverterTest
     @Test
     void convertDto_shouldReturn_equivEntity()
     {
-        UnitOfMeasureDto uomDto = new UnitOfMeasureDto();
-        uomDto.setId(UOM_ID);
-        uomDto.setDescription(UOM_DESC);
-
         IngredientDto dto = new IngredientDto();
         dto.setId(INGRED_ID);
         dto.setDescription(INGRED_DESC);
         dto.setAmount(AMOUNT);
-        dto.setUom(uomDto);
+        dto.setUom(getTestUomDto());
 
         Ingredient entity = converter.convertDto(dto);
 
@@ -87,5 +79,23 @@ class IngredientConverterTest
     {
         Ingredient entity = converter.convertDto(null);
         assertNull(entity);
+    }
+
+    private UnitOfMeasure getTestUomEntity()
+    {
+        UnitOfMeasure uomEntity = new UnitOfMeasure();
+        uomEntity.setId(UOM_ID);
+        uomEntity.setDescription(UOM_DESC);
+
+        return uomEntity;
+    }
+
+    private UnitOfMeasureDto getTestUomDto()
+    {
+        UnitOfMeasureDto uomDto = new UnitOfMeasureDto();
+        uomDto.setId(UOM_ID);
+        uomDto.setDescription(UOM_DESC);
+
+        return uomDto;
     }
 }
