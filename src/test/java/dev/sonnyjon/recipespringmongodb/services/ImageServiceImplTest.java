@@ -9,7 +9,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -25,7 +24,7 @@ import static org.mockito.Mockito.*;
  * Created by Sonny on 7/11/2022.
  */
 @ExtendWith(SpringExtension.class)
-@SpringBootTest
+//@SpringBootTest
 @ActiveProfiles(profiles = {"test"})
 class ImageServiceImplTest
 {
