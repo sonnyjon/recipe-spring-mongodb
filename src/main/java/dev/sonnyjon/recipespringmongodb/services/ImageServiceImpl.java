@@ -1,5 +1,6 @@
 package dev.sonnyjon.recipespringmongodb.services;
 
+import dev.sonnyjon.recipespringmongodb.exceptions.NotFoundException;
 import dev.sonnyjon.recipespringmongodb.model.Recipe;
 import dev.sonnyjon.recipespringmongodb.repositories.RecipeRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -8,7 +9,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.NoSuchElementException;
 
 /**
  * Created by Sonny on 7/9/2022.
@@ -29,7 +29,7 @@ public class ImageServiceImpl implements ImageService
     public void saveImageFile(String recipeId, MultipartFile file)
     {
         try {
-            Recipe recipe = recipeRepository.findById(recipeId).orElseThrow(NoSuchElementException::new);
+            Recipe recipe = recipeRepository.findById(recipeId).orElseThrow(NotFoundException::new);
             Byte[] byteObjects = new Byte[file.getBytes().length];
             int i = 0;
 
