@@ -28,6 +28,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation "org.webjars:bootstrap:3.3.7"
     implementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
+    implementation 'jakarta.validation:jakarta.validation-api:3.0.2'
 
     compileOnly 'org.projectlombok:lombok'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'

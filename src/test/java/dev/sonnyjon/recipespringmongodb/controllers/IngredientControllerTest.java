@@ -258,7 +258,7 @@ class IngredientControllerTest
 //                        .param("description", "My new ingredient")
 //                )
 //                .andExpect(status().is3xxRedirection())
-//                .andExpect(forwardedUrl( EXPECTED_RETURN ));
+//                .andExpect(redirectedUrl( EXPECTED_RETURN ));
 //
 //        verify(ingredientService, times(1)).saveIngredient(anyString(), any());
 //    }
