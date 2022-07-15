@@ -2,6 +2,7 @@ package dev.sonnyjon.recipespringmongodb.services;
 
 import dev.sonnyjon.recipespringmongodb.converters.IngredientConverter;
 import dev.sonnyjon.recipespringmongodb.dto.IngredientDto;
+import dev.sonnyjon.recipespringmongodb.exceptions.NotFoundException;
 import dev.sonnyjon.recipespringmongodb.model.Ingredient;
 import dev.sonnyjon.recipespringmongodb.model.Recipe;
 import dev.sonnyjon.recipespringmongodb.model.UnitOfMeasure;
@@ -34,9 +35,6 @@ public class IngredientServiceImpl implements IngredientService
     public IngredientDto findByRecipeIdAndIngredientId(String recipeId, String ingredientId)
     {
         Recipe recipe = findRecipe(recipeId);
-
-        if (recipe == null) return null;
-
         Ingredient ingredient = findIngredient(recipe, ingredientId);
         return converter.convertEntity(ingredient);
     }
@@ -123,7 +121,8 @@ public class IngredientServiceImpl implements IngredientService
                                                 )
                                                 .findFirst();
 
-        return optional.orElse(null);
+        return optional.orElseThrow(() ->
+                new NotFoundException("Ingredient not found for ID: " + ingredientId));
     }
 
     private Ingredient findIngredientByDescription(Recipe recipe, IngredientDto dto)
@@ -150,6 +149,7 @@ public class IngredientServiceImpl implements IngredientService
     private Recipe findRecipe(String recipeId)
     {
         Optional<Recipe> optional = recipeRepository.findById(recipeId);
-        return optional.orElse(null);
+        return optional.orElseThrow(() ->
+                new NotFoundException("Recipe not found for ID: " + recipeId));
     }
 }
