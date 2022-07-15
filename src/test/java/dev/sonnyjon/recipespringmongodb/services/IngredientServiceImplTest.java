@@ -2,6 +2,7 @@ package dev.sonnyjon.recipespringmongodb.services;
 
 import dev.sonnyjon.recipespringmongodb.dto.IngredientDto;
 import dev.sonnyjon.recipespringmongodb.dto.UnitOfMeasureDto;
+import dev.sonnyjon.recipespringmongodb.exceptions.NotFoundException;
 import dev.sonnyjon.recipespringmongodb.model.Ingredient;
 import dev.sonnyjon.recipespringmongodb.model.Recipe;
 import dev.sonnyjon.recipespringmongodb.model.UnitOfMeasure;
@@ -75,15 +76,11 @@ class IngredientServiceImplTest
     }
 
     @Test
-    void findByRecipeIdAndIngredientId_shouldReturnNull_ifNotFound()
+    void findByRecipeIdAndIngredientId_shouldThrowException_whenNotFound()
     {
-        Recipe recipe = getTestRecipeWithIngredient();
-        Optional<Recipe> recipeOptional = Optional.of(recipe);
+        when(recipeRepository.findById(anyString())).thenThrow(new NotFoundException("Recipe Not Found"));
 
-        when(recipeRepository.findById(RECIPE_ID)).thenReturn(recipeOptional);
-
-        IngredientDto dto = ingredientService.findByRecipeIdAndIngredientId(RECIPE_ID, INGRED_ID_2);
-        assertNull(dto);
+        assertThrows(NotFoundException.class, () -> recipeRepository.findById(RECIPE_ID));
     }
 
     @Test
@@ -110,9 +107,9 @@ class IngredientServiceImplTest
         IngredientDto actualIngredient = ingredientService.saveIngredient(desiredRecipe.getId(), ingredientDto);
 
         Optional<Ingredient> optional = desiredRecipe.getIngredients().stream().findFirst();
-        Ingredient desiredIngredient = optional.orElse(null);
+        Ingredient expectedIngredient = optional.orElse(new Ingredient());
 
-        assertEquals(desiredIngredient.getId(), actualIngredient.getId());
+        assertEquals(expectedIngredient.getId(), actualIngredient.getId());
     }
 
     @Test

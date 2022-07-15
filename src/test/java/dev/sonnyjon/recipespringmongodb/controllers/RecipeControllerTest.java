@@ -10,6 +10,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -17,6 +18,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 /**
@@ -146,29 +148,31 @@ public class RecipeControllerTest
     @Test
     public void saveOrUpdate_shouldReturnShowUri_afterSave() throws Exception
     {
+        final String RECIPE_ID = "RECIPE-1";
         final String TEST_URI = "/recipe";
+        final String EXPECTED_RETURN = String.format("/recipe/%s/show", RECIPE_ID);
+
+        // given
+        RecipeDto expectedRecipe = new RecipeDto();
+        expectedRecipe.setId( RECIPE_ID );
+
+        when(recipeService.saveRecipe(any())).thenReturn(expectedRecipe);
+
+        // when, then
+        mockMvc.perform(post( TEST_URI )
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                        .param("id", "")
+                        .param("description", "My new recipe")
+                        .param("descriptions", "This is how you do it")
+                )
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl( EXPECTED_RETURN ));
+
+        // then
     }
 
-    // TODO Fix this along with POST call on IngredientControllerTest.
+    // TODO Form validation tests
 
-//    @Test
-//    public void testPostNewRecipeForm() throws Exception
-//    {
-//        RecipeCommand command = new RecipeCommand();
-//        command.setId("2");
-//
-//        when(recipeService.saveRecipeCommand(any())).thenReturn(command);
-//
-//        mockMvc.perform(post("/recipe")
-//                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-//                        .param("id", "")
-//                        .param("description", "some string")
-//                        .param("directions", "some directions")
-//                )
-//                .andExpect(status().is3xxRedirection())
-//                .andExpect(view().name("redirect:/recipe/2/show"));
-//    }
-//
 //    @Test
 //    public void testPostNewRecipeFormValidationFail() throws Exception
 //    {

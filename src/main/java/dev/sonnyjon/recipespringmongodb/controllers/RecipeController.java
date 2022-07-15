@@ -41,21 +41,19 @@ public class RecipeController
         return "recipe/recipeform";
     }
 
-    @GetMapping("recipe/{id}/update")
+    @GetMapping("/recipe/{id}/update")
     public String updateRecipe(@PathVariable String id, Model model)
     {
         model.addAttribute("recipe", recipeService.findDtoById(id));
         return RECIPE_RECIPEFORM_URL;
     }
 
-    @PostMapping("recipe")
+    @PostMapping("/recipe")
     public String saveOrUpdate(@Valid @ModelAttribute("recipe") RecipeDto recipeDto, BindingResult bindingResult)
     {
         if (bindingResult.hasErrors())
         {
-            bindingResult.getAllErrors().forEach(objectError -> {
-                log.debug(objectError.toString());
-            });
+            bindingResult.getAllErrors().forEach(objectError -> log.debug(objectError.toString()));
 
             return RECIPE_RECIPEFORM_URL;
         }
@@ -65,7 +63,7 @@ public class RecipeController
         return String.format("redirect:/recipe/%s/show", savedRecipe.getId());
     }
 
-    @GetMapping("recipe/{id}/delete")
+    @GetMapping("/recipe/{id}/delete")
     public String deleteById(@PathVariable String id)
     {
         log.debug("Deleting id: " + id);

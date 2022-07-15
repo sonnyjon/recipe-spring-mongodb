@@ -8,7 +8,6 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -37,9 +36,8 @@ class ImageControllerTest
     ImageService imageService;
     @Mock
     RecipeService recipeService;
-    @InjectMocks
-    ImageController controller;
 
+    ImageController controller;
     MockMvc mockMvc;
     AutoCloseable mocks;
 
@@ -47,6 +45,7 @@ class ImageControllerTest
     void setUp()
     {
         mocks = MockitoAnnotations.openMocks(this);
+        controller = new ImageController(imageService, recipeService);
         mockMvc = MockMvcBuilders.standaloneSetup(controller).build();
     }
 
@@ -60,19 +59,20 @@ class ImageControllerTest
     public void showForm_shouldReturnFormUri_whenRecipeFound() throws Exception
     {
         final String RECIPE_ID = "RECIPE-1";
-        final String expectedUri = "recipe/imageuploadform";
+        final String TEST_URI = String.format("/recipe/%s/image", RECIPE_ID);
+        final String EXPECTED_RETURN = "recipe/imageuploadform";
 
         // given
         RecipeDto recipeDto = new RecipeDto();
-        recipeDto.setId(RECIPE_ID);
+        recipeDto.setId( RECIPE_ID );
 
         when(recipeService.findDtoById(anyString())).thenReturn(recipeDto);
 
         // when
-        mockMvc.perform(get("/recipe/{id}/image", RECIPE_ID))
+        mockMvc.perform(get( TEST_URI ))
                 .andExpect(status().isOk())
                 .andExpect(model().attributeExists("recipe"))
-                .andExpect(forwardedUrl(expectedUri));
+                .andExpect(forwardedUrl( EXPECTED_RETURN ));
 
         // then
         verify(recipeService, times(1)).findDtoById(anyString());
@@ -82,12 +82,13 @@ class ImageControllerTest
     public void showForm_shouldThrowException_whenRecipeNotFound() throws Exception
     {
         final String RECIPE_ID = "RECIPE-1";
+        final String TEST_URI = String.format("/recipe/%s/image", RECIPE_ID);
 
         // given
         when(recipeService.findDtoById(anyString())).thenThrow(NotFoundException.class);
 
         // when
-        mockMvc.perform(get("/recipe/{id}/image", RECIPE_ID))
+        mockMvc.perform(get( TEST_URI ))
                 .andExpect(status().isNotFound())
                 .andExpect(result -> assertTrue(result.getResolvedException() instanceof NotFoundException));
 
@@ -140,6 +141,7 @@ class ImageControllerTest
     public void renderImage_shouldStream_ImageBytes() throws Exception
     {
         final String RECIPE_ID = "RECIPE-1";
+        final String TEST_URI = String.format("/recipe/%s/recipeimage", RECIPE_ID);
 
         // given
         String sub = "fake image text";
@@ -152,13 +154,13 @@ class ImageControllerTest
         }
 
         RecipeDto recipeDto = new RecipeDto();
-        recipeDto.setId(RECIPE_ID);
+        recipeDto.setId( RECIPE_ID );
         recipeDto.setImage(bytesBoxed);
 
         when(recipeService.findDtoById(anyString())).thenReturn(recipeDto);
 
         // when
-        MockHttpServletResponse response = mockMvc.perform(get("/recipe/{id}/recipeimage", RECIPE_ID))
+        MockHttpServletResponse response = mockMvc.perform(get( TEST_URI ))
                                                     .andExpect(status().isOk())
                                                     .andReturn().getResponse();
 

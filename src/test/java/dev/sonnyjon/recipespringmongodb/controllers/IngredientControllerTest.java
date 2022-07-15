@@ -13,6 +13,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -23,6 +24,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 /**
@@ -237,32 +239,31 @@ class IngredientControllerTest
     }
 
     // TODO Not working. Debug this once resources are in place
-//    @Test
-//    public void saveOrUpdate_shouldReturnShowUri_afterSave() throws Exception
-//    {
-//        final String RECIPE_ID = "RECIPE-1";
-//        final String INGRED_ID = "INGRED-1";
-//        final String TEST_URI = String.format("/recipe/{recipeId}/ingredient", RECIPE_ID);
-//        final String EXPECTED_RETURN = String.format("redirect:/recipe/%1$s/ingredient/%2$s/show", RECIPE_ID, INGRED_ID);
-//
-//        // given
-//        IngredientDto expectedIng = new IngredientDto();
-//        expectedIng.setId(INGRED_ID);
-//
-//        when(ingredientService.saveIngredient(anyString(), any())).thenReturn(expectedIng);
-//
-//        // when, then
-//        mockMvc.perform(post( TEST_URI )
-//                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-//                        .param("id", "")
-//                        .param("description", "My new ingredient")
-//                )
-//                .andExpect(status().is3xxRedirection())
-//                .andExpect(redirectedUrl( EXPECTED_RETURN ));
-//
-//        verify(ingredientService, times(1)).saveIngredient(anyString(), any());
-//    }
+    @Test
+    public void saveOrUpdate_shouldReturnShowUri_afterSave() throws Exception
+    {
+        final String RECIPE_ID = "RECIPE-1";
+        final String INGRED_ID = "INGRED-1";
+        final String TEST_URI = String.format("/recipe/%s/ingredient", RECIPE_ID);
+        final String EXPECTED_RETURN = String.format("/recipe/%1$s/ingredient/%2$s/show", RECIPE_ID, INGRED_ID);
 
+        // given
+        IngredientDto expectedIng = new IngredientDto();
+        expectedIng.setId(INGRED_ID);
+
+        when(ingredientService.saveIngredient(anyString(), any())).thenReturn(expectedIng);
+
+        // when, then
+        mockMvc.perform(post( TEST_URI )
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                        .param("id", "")
+                        .param("description", "My new ingredient")
+                )
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl( EXPECTED_RETURN ));
+
+        verify(ingredientService, times(1)).saveIngredient(anyString(), any());
+    }
 
     @Test
     public void deleteIngredient_shouldReturnListUri_afterDelete() throws Exception
