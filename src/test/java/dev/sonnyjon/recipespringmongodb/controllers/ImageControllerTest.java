@@ -8,6 +8,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -36,8 +37,9 @@ class ImageControllerTest
     ImageService imageService;
     @Mock
     RecipeService recipeService;
-
+    @InjectMocks
     ImageController controller;
+
     MockMvc mockMvc;
     AutoCloseable mocks;
 
@@ -45,8 +47,6 @@ class ImageControllerTest
     void setUp()
     {
         mocks = MockitoAnnotations.openMocks(this);
-
-        controller = new ImageController(imageService, recipeService);
         mockMvc = MockMvcBuilders.standaloneSetup(controller).build();
     }
 
