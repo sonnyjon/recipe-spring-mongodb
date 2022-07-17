@@ -39,13 +39,34 @@ public class RecipeLoader implements ApplicationListener<ContextRefreshedEvent>
     @Transactional
     public void onApplicationEvent(ContextRefreshedEvent event)
     {
+        if (shouldLoad()) doLoad();
+        else skipLoad();
+    }
+
+    private void skipLoad()
+    {
+        log.info("---------------------------------------------------------");
+        log.info("Load Skipped: Bootstrap data already exists.");
+        log.info("---------------------------------------------------------");
+    }
+
+    private void doLoad()
+    {
         loadCategories();
         loadUom();
         recipeRepository.saveAll(getRecipes());
 
         log.info("---------------------------------------------------------");
-        log.info("Loading Bootstrap Data");
+        log.info("Loading Bootstrap data");
         log.info("---------------------------------------------------------");
+    }
+
+    private boolean shouldLoad()
+    {
+        int catCount = categoryRepository.findAll().size();
+        int uomCount = unitOfMeasureRepository.findAll().size();
+
+        return catCount == 0 || uomCount == 0;
     }
 
     private void loadCategories()
