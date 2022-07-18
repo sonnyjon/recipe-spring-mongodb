@@ -24,11 +24,10 @@ import static org.mockito.Mockito.*;
  * Created by Sonny on 7/11/2022.
  */
 @ExtendWith(SpringExtension.class)
-//@SpringBootTest
 @ActiveProfiles(profiles = {"test"})
 class ImageServiceImplTest
 {
-    public static final String IMAGE_ID = "IMAGE-1";
+    public static final String RECIPE_ID = "RECIPE-1";
 
     @Mock
     RecipeRepository recipeRepository;
@@ -58,14 +57,14 @@ class ImageServiceImplTest
                 "Spring Framework Guru".getBytes());
 
         Recipe recipe = new Recipe();
-        recipe.setId(IMAGE_ID);
+        recipe.setId(RECIPE_ID);
         Optional<Recipe> recipeOptional = Optional.of(recipe);
 
         when(recipeRepository.findById(anyString())).thenReturn(recipeOptional);
 
         ArgumentCaptor<Recipe> argumentCaptor = ArgumentCaptor.forClass(Recipe.class);
 
-        imageService.saveImageFile(IMAGE_ID, multipartFile);
+        imageService.saveImageFile(RECIPE_ID, multipartFile);
 
         verify(recipeRepository, times(1)).save(argumentCaptor.capture());
         Recipe savedRecipe = argumentCaptor.getValue();
