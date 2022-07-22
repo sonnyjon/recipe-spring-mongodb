@@ -14,7 +14,7 @@ class RecipeTest
 {
     static final String RECIPE_ID = "RECIPE-1";
     static final String NOTES_ID = "NOTES-1";
-    static final String INGRED_ID = "INGRED-1";
+    static final String INGRED_DESC = "INGRED-DESC";
 
     Recipe recipe;
 
@@ -22,14 +22,14 @@ class RecipeTest
     void setUp()
     {
         recipe = new Recipe();
-        recipe.setId(RECIPE_ID);
+        recipe.setId( RECIPE_ID );
     }
 
     @Test
     void addIngredient_returnRecipe_shouldContainIngredient()
     {
         Ingredient ingredient = new Ingredient();
-        ingredient.setId(INGRED_ID);
+        ingredient.setDescription( INGRED_DESC );
         Recipe recipeAfter = recipe.addIngredient(ingredient);
 
         assertTrue(recipeAfter.getIngredients().contains(ingredient));

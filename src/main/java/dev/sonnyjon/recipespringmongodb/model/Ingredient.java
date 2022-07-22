@@ -1,9 +1,11 @@
 package dev.sonnyjon.recipespringmongodb.model;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.math.BigDecimal;
 
@@ -12,6 +14,8 @@ import java.math.BigDecimal;
  */
 @Getter
 @Setter
+@NoArgsConstructor
+@Document("ingredient")
 public class Ingredient
 {
     @Id
@@ -19,13 +23,8 @@ public class Ingredient
 
     private String description;
     private BigDecimal amount;
-
     @DBRef
     private UnitOfMeasure uom;
-
-    public Ingredient()
-    {
-    }
 
     public Ingredient(String description, BigDecimal amount, UnitOfMeasure uom)
     {

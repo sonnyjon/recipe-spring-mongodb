@@ -3,6 +3,7 @@ package dev.sonnyjon.recipespringmongodb.controllers;
 import dev.sonnyjon.recipespringmongodb.dto.IngredientDto;
 import dev.sonnyjon.recipespringmongodb.dto.RecipeDto;
 import dev.sonnyjon.recipespringmongodb.exceptions.NotFoundException;
+import dev.sonnyjon.recipespringmongodb.model.Recipe;
 import dev.sonnyjon.recipespringmongodb.services.IngredientService;
 import dev.sonnyjon.recipespringmongodb.services.RecipeService;
 import dev.sonnyjon.recipespringmongodb.services.UnitOfMeasureService;
@@ -21,10 +22,8 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import java.util.HashSet;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 /**
@@ -35,13 +34,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class IngredientControllerTest
 {
     @Mock
-    IngredientService ingredientService;
-    @Mock
     UnitOfMeasureService unitOfMeasureService;
     @Mock
     RecipeService recipeService;
-
+    @Mock
+    IngredientService ingredientService;
     IngredientController controller;
+
     MockMvc mockMvc;
     AutoCloseable mocks;
 
@@ -70,7 +69,7 @@ class IngredientControllerTest
         final RecipeDto recipe = new RecipeDto();
         recipe.setId( RECIPE_ID );
 
-        when(recipeService.findDtoById( RECIPE_ID )).thenReturn(recipe);
+        when(recipeService.findDtoById( RECIPE_ID )).thenReturn( recipe );
 
         // when, then
         mockMvc.perform(get( TEST_URI ))
@@ -111,10 +110,13 @@ class IngredientControllerTest
         final String EXPECTED_RETURN = "recipe/ingredient/show";
 
         // given
-        IngredientDto ingredient = new IngredientDto();
-        ingredient.setId(INGRED_ID);
+        Recipe recipe = new Recipe();
+        recipe.setId( RECIPE_ID );
 
-        when(ingredientService.findByRecipeIdAndIngredientId( RECIPE_ID, INGRED_ID )).thenReturn(ingredient);
+        IngredientDto ingredient = new IngredientDto();
+        ingredient.setId( INGRED_ID );
+
+        when(ingredientService.findByRecipe( RECIPE_ID, INGRED_ID )).thenReturn( ingredient );
 
         // when, then
         mockMvc.perform(get( TEST_URI ))
@@ -122,8 +124,7 @@ class IngredientControllerTest
                 .andExpect(model().attributeExists("ingredient"))
                 .andExpect(forwardedUrl( EXPECTED_RETURN ));
 
-        verify(ingredientService, times(1))
-        .findByRecipeIdAndIngredientId(anyString(), anyString());
+        verify(ingredientService, times(1)).findByRecipe(anyString(), anyString());
     }
 
     @Test
@@ -134,16 +135,14 @@ class IngredientControllerTest
         final String TEST_URI = String.format("/recipe/%1$s/ingredient/%2$s/show", RECIPE_ID, INGRED_ID);
 
         // given
-        when(ingredientService.findByRecipeIdAndIngredientId( RECIPE_ID, INGRED_ID ))
-        .thenThrow(NotFoundException.class);
+        when(ingredientService.findByRecipe( RECIPE_ID, INGRED_ID )).thenThrow(NotFoundException.class);
 
         // when, then
         mockMvc.perform(get( TEST_URI ))
                 .andExpect(status().isNotFound())
                 .andExpect(result -> assertTrue(result.getResolvedException() instanceof NotFoundException));
 
-        verify(ingredientService, times(1))
-                .findByRecipeIdAndIngredientId(anyString(), anyString());
+        verify(ingredientService, times(1)).findByRecipe(anyString(), anyString());
     }
 
     @Test
@@ -157,8 +156,8 @@ class IngredientControllerTest
         final RecipeDto testRecipe = new RecipeDto();
         testRecipe.setId( RECIPE_ID );
 
-        when(recipeService.findDtoById( RECIPE_ID )).thenReturn(testRecipe);
-        when(unitOfMeasureService.listAllUoms()).thenReturn(new HashSet<>());
+        when(recipeService.findDtoById( RECIPE_ID )).thenReturn( testRecipe );
+        when(unitOfMeasureService.listAllUoms()).thenReturn( new HashSet<>() );
 
         // when, then
         mockMvc.perform(get( TEST_URI ))
@@ -203,8 +202,8 @@ class IngredientControllerTest
         IngredientDto ingredient = new IngredientDto();
         ingredient.setId( INGRED_ID );
 
-        when(ingredientService.findByRecipeIdAndIngredientId( RECIPE_ID, INGRED_ID )).thenReturn(ingredient);
-        when(unitOfMeasureService.listAllUoms()).thenReturn(new HashSet<>());
+        when(ingredientService.findByRecipe( RECIPE_ID, INGRED_ID )).thenReturn( ingredient );
+        when(unitOfMeasureService.listAllUoms()).thenReturn( new HashSet<>() );
 
         // when, then
         mockMvc.perform(get( TEST_URI ))
@@ -213,8 +212,7 @@ class IngredientControllerTest
                 .andExpect(model().attributeExists("uomList"))
                 .andExpect(forwardedUrl( EXPECTED_RETURN ));
 
-        verify(ingredientService, times(1))
-                .findByRecipeIdAndIngredientId(anyString(), anyString());
+        verify(ingredientService, times(1)).findByRecipe(anyString(), anyString());
         verify(unitOfMeasureService, times(1)).listAllUoms();
     }
 
@@ -226,16 +224,16 @@ class IngredientControllerTest
         final String TEST_URI = String.format("/recipe/%1$s/ingredient/%2$s/update", RECIPE_ID, INGRED_ID);
 
         // given
-        when(ingredientService.findByRecipeIdAndIngredientId( RECIPE_ID, INGRED_ID ))
-                .thenThrow(NotFoundException.class);
+        when(ingredientService.findByRecipe( RECIPE_ID, INGRED_ID )).thenThrow(NotFoundException.class);
 
         // when, then
         mockMvc.perform(get( TEST_URI ))
                 .andExpect(status().isNotFound())
-                .andExpect(result -> assertTrue(result.getResolvedException() instanceof NotFoundException));
+                .andExpect(
+                    result -> assertTrue(result.getResolvedException() instanceof NotFoundException)
+                );
 
-        verify(ingredientService, times(1))
-                .findByRecipeIdAndIngredientId(anyString(), anyString());
+        verify(ingredientService, times(1)).findByRecipe(anyString(), anyString());
     }
 
     // TODO Not working. Debug this once resources are in place
@@ -248,19 +246,42 @@ class IngredientControllerTest
         final String EXPECTED_RETURN = String.format("/recipe/%1$s/ingredient/%2$s/show", RECIPE_ID, INGRED_ID);
 
         // given
-        IngredientDto expectedIng = new IngredientDto();
-        expectedIng.setId(INGRED_ID);
+        IngredientDto expected = new IngredientDto();
+        expected.setId( INGRED_ID );
 
-        when(ingredientService.saveIngredient(anyString(), any())).thenReturn(expectedIng);
+        when(ingredientService.saveIngredient(anyString(), any())).thenReturn( expected );
 
         // when, then
         mockMvc.perform(post( TEST_URI )
                         .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                         .param("id", "")
                         .param("description", "My new ingredient")
+                        .param("amount", "3")
                 )
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl( EXPECTED_RETURN ));
+
+        verify(ingredientService, times(1)).saveIngredient(anyString(), any());
+    }
+
+    @Test
+    public void saveOrUpdate_shouldThrowException_whenRecipeNotFound() throws Exception
+    {
+        final String RECIPE_ID = "RECIPE-1";
+        final String TEST_URI = String.format("/recipe/%s/ingredient", RECIPE_ID);
+
+        // given
+        when(ingredientService.saveIngredient(anyString(), any())).thenThrow( NotFoundException.class );
+
+        // when, then
+        mockMvc.perform(post( TEST_URI )
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                        .param("id", "")
+                        .param("description", "My new ingredient")
+                        .param("amount", "3")
+                )
+                .andExpect(status().isNotFound())
+                .andExpect(result -> assertTrue(result.getResolvedException() instanceof NotFoundException));
 
         verify(ingredientService, times(1)).saveIngredient(anyString(), any());
     }
@@ -274,14 +295,14 @@ class IngredientControllerTest
         final String EXPECTED_RETURN = String.format("/recipe/%s/ingredients", RECIPE_ID);
 
         // given
-        when(ingredientService.deleteById(anyString(), anyString())).thenReturn(true);
+        doNothing().when(ingredientService).removeIngredient(anyString(), anyString());
 
         // when, then
         mockMvc.perform(get( TEST_URI ))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl( EXPECTED_RETURN ));
 
-        verify(ingredientService, times(1)).deleteById(anyString(), anyString());
+        verify(ingredientService, times(1)).removeIngredient(anyString(), anyString());
 
     }
 
@@ -293,13 +314,13 @@ class IngredientControllerTest
         final String TEST_URI = String.format("/recipe/%1$s/ingredient/%2$s/delete", RECIPE_ID, INGRED_ID);
 
         // given
-        when(ingredientService.deleteById(anyString(), anyString())).thenThrow(NotFoundException.class);
+        doThrow(NotFoundException.class).when(ingredientService).removeIngredient(anyString(), anyString());
 
         // when, then
         mockMvc.perform(get( TEST_URI ))
                 .andExpect(status().isNotFound())
                 .andExpect(result -> assertTrue(result.getResolvedException() instanceof NotFoundException));
 
-        verify(ingredientService, times(1)).deleteById(anyString(), anyString());
+        verify(ingredientService, times(1)).removeIngredient(anyString(), anyString());
     }
 }

@@ -27,24 +27,13 @@ public class Recipe
     private String source;
     private String url;
     private String directions;
-    private Set<Ingredient> ingredients = new HashSet<>();
     private Byte[] image;
     private Difficulty difficulty;
     private Notes notes;
-
+    @DBRef
+    private Set<Ingredient> ingredients = new HashSet<>();
     @DBRef
     private Set<Category> categories = new HashSet<>();
-
-    /**
-     * Sets this Recipe's notes to the parameter notes and creates a bidirectional relationship by
-     * setting the parameter's recipe to this Recipe, given the parameter is not null.
-     *
-     * @param notes Notes for this Recipe.
-     */
-    public void setNotes(Notes notes)
-    {
-        this.notes = notes;
-    }
 
     /**
      * Adds the ingredient parameter to this Recipe's ingredient collection.
