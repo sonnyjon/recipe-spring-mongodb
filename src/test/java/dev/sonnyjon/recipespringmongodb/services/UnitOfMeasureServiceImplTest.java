@@ -10,7 +10,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.ArrayList;
@@ -24,7 +23,6 @@ import static org.mockito.Mockito.when;
  * Created by Sonny on 7/12/2022.
  */
 @ExtendWith(SpringExtension.class)
-@ActiveProfiles(profiles = {"test"})
 class UnitOfMeasureServiceImplTest
 {
     @Mock

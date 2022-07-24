@@ -12,7 +12,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.function.Executable;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.*;
@@ -27,7 +26,6 @@ import static org.mockito.Mockito.*;
  * Created by Sonny on 7/12/2022.
  */
 @ExtendWith(SpringExtension.class)
-@ActiveProfiles(profiles = {"test"})
 class RecipeServiceImplTest
 {
     @Mock

@@ -4,14 +4,13 @@ import dev.sonnyjon.recipespringmongodb.dto.CategoryDto;
 import dev.sonnyjon.recipespringmongodb.model.Category;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.test.context.ActiveProfiles;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 /**
  * Created by Sonny on 7/8/2022.
  */
-@ActiveProfiles(profiles = {"test"})
 class CategoryConverterTest
 {
     public static final String CAT_ID = "CAT-1";

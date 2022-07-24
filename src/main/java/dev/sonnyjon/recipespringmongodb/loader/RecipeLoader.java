@@ -2,6 +2,7 @@ package dev.sonnyjon.recipespringmongodb.loader;
 
 import dev.sonnyjon.recipespringmongodb.model.*;
 import dev.sonnyjon.recipespringmongodb.repositories.CategoryRepository;
+import dev.sonnyjon.recipespringmongodb.repositories.IngredientRepository;
 import dev.sonnyjon.recipespringmongodb.repositories.RecipeRepository;
 import dev.sonnyjon.recipespringmongodb.repositories.UnitOfMeasureRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -24,14 +25,17 @@ public class RecipeLoader implements ApplicationListener<ContextRefreshedEvent>
 {
     private final CategoryRepository categoryRepository;
     private final RecipeRepository recipeRepository;
+    private final IngredientRepository ingredientRepository;
     private final UnitOfMeasureRepository unitOfMeasureRepository;
 
     public RecipeLoader(CategoryRepository categoryRepository,
-                           RecipeRepository recipeRepository,
-                           UnitOfMeasureRepository unitOfMeasureRepository)
+                        RecipeRepository recipeRepository,
+                        IngredientRepository ingredientRepository,
+                        UnitOfMeasureRepository unitOfMeasureRepository)
     {
         this.categoryRepository = categoryRepository;
         this.recipeRepository = recipeRepository;
+        this.ingredientRepository = ingredientRepository;
         this.unitOfMeasureRepository = unitOfMeasureRepository;
     }
 
@@ -71,7 +75,7 @@ public class RecipeLoader implements ApplicationListener<ContextRefreshedEvent>
 
     private void loadCategories()
     {
-        Category cat1 = new Category();
+        Category cat1 =  new Category();
         cat1.setDescription("American");
         categoryRepository.save(cat1);
 
@@ -121,6 +125,12 @@ public class RecipeLoader implements ApplicationListener<ContextRefreshedEvent>
         UnitOfMeasure uom8 = new UnitOfMeasure();
         uom8.setDescription("Dash");
         unitOfMeasureRepository.save(uom8);
+    }
+
+    private Ingredient buildIngredient(String desc, String amount, UnitOfMeasure uom)
+    {
+        Ingredient ingredient = new Ingredient( desc, new BigDecimal(amount), uom );
+        return ingredientRepository.save( ingredient );
     }
 
     private List<Recipe> getRecipes()
@@ -195,14 +205,14 @@ public class RecipeLoader implements ApplicationListener<ContextRefreshedEvent>
         guacRecipe.setNotes(guacNotes);
 
         //very redundent - could add helper method, and make this simpler
-        guacRecipe.addIngredient(new Ingredient("ripe avocados", new BigDecimal(2), eachUom));
-        guacRecipe.addIngredient(new Ingredient("Kosher salt", new BigDecimal(".5"), teapoonUom));
-        guacRecipe.addIngredient(new Ingredient("fresh lime juice or lemon juice", new BigDecimal(2), tableSpoonUom));
-        guacRecipe.addIngredient(new Ingredient("minced red onion or thinly sliced green onion", new BigDecimal(2), tableSpoonUom));
-        guacRecipe.addIngredient(new Ingredient("serrano chiles, stems and seeds removed, minced", new BigDecimal(2), eachUom));
-        guacRecipe.addIngredient(new Ingredient("Cilantro", new BigDecimal(2), tableSpoonUom));
-        guacRecipe.addIngredient(new Ingredient("freshly grated black pepper", new BigDecimal(2), dashUom));
-        guacRecipe.addIngredient(new Ingredient("ripe tomato, seeds and pulp removed, chopped", new BigDecimal(".5"), eachUom));
+        guacRecipe.addIngredient( buildIngredient("ripe avocados", "2", eachUom) );
+        guacRecipe.addIngredient( buildIngredient("Kosher salt", ".5", teapoonUom));
+        guacRecipe.addIngredient( buildIngredient("fresh lime juice or lemon juice", "2", tableSpoonUom));
+        guacRecipe.addIngredient( buildIngredient("minced red onion or thinly sliced green onion", "2", tableSpoonUom));
+        guacRecipe.addIngredient( buildIngredient("serrano chiles, stems and seeds removed, minced", "2", eachUom));
+        guacRecipe.addIngredient( buildIngredient("Cilantro", "2", tableSpoonUom));
+        guacRecipe.addIngredient( buildIngredient("freshly grated black pepper", "2", dashUom));
+        guacRecipe.addIngredient( buildIngredient("ripe tomato, seeds and pulp removed, chopped", ".5", eachUom));
 
         guacRecipe.getCategories().add(americanCategory);
         guacRecipe.getCategories().add(mexicanCategory);
@@ -246,25 +256,25 @@ public class RecipeLoader implements ApplicationListener<ContextRefreshedEvent>
 
         tacosRecipe.setNotes(tacoNotes);
 
-        tacosRecipe.addIngredient(new Ingredient("Ancho Chili Powder", new BigDecimal(2), tableSpoonUom));
-        tacosRecipe.addIngredient(new Ingredient("Dried Oregano", new BigDecimal(1), teapoonUom));
-        tacosRecipe.addIngredient(new Ingredient("Dried Cumin", new BigDecimal(1), teapoonUom));
-        tacosRecipe.addIngredient(new Ingredient("Sugar", new BigDecimal(1), teapoonUom));
-        tacosRecipe.addIngredient(new Ingredient("Salt", new BigDecimal(".5"), teapoonUom));
-        tacosRecipe.addIngredient(new Ingredient("Clove of Garlic, Choppedr", new BigDecimal(1), eachUom));
-        tacosRecipe.addIngredient(new Ingredient("finely grated orange zestr", new BigDecimal(1), tableSpoonUom));
-        tacosRecipe.addIngredient(new Ingredient("fresh-squeezed orange juice", new BigDecimal(3), tableSpoonUom));
-        tacosRecipe.addIngredient(new Ingredient("Olive Oil", new BigDecimal(2), tableSpoonUom));
-        tacosRecipe.addIngredient(new Ingredient("boneless chicken thighs", new BigDecimal(4), tableSpoonUom));
-        tacosRecipe.addIngredient(new Ingredient("small corn tortillasr", new BigDecimal(8), eachUom));
-        tacosRecipe.addIngredient(new Ingredient("packed baby arugula", new BigDecimal(3), cupsUom));
-        tacosRecipe.addIngredient(new Ingredient("medium ripe avocados, slic", new BigDecimal(2), eachUom));
-        tacosRecipe.addIngredient(new Ingredient("radishes, thinly sliced", new BigDecimal(4), eachUom));
-        tacosRecipe.addIngredient(new Ingredient("cherry tomatoes, halved", new BigDecimal(".5"), pintUom));
-        tacosRecipe.addIngredient(new Ingredient("red onion, thinly sliced", new BigDecimal(".25"), eachUom));
-        tacosRecipe.addIngredient(new Ingredient("Roughly chopped cilantro", new BigDecimal(4), eachUom));
-        tacosRecipe.addIngredient(new Ingredient("cup sour cream thinned with 1/4 cup milk", new BigDecimal(4), cupsUom));
-        tacosRecipe.addIngredient(new Ingredient("lime, cut into wedges", new BigDecimal(4), eachUom));
+        tacosRecipe.addIngredient( buildIngredient("Ancho Chili Powder", "2", tableSpoonUom));
+        tacosRecipe.addIngredient( buildIngredient("Dried Oregano", "1", teapoonUom));
+        tacosRecipe.addIngredient( buildIngredient("Dried Cumin", "1", teapoonUom));
+        tacosRecipe.addIngredient( buildIngredient("Sugar", "1", teapoonUom));
+        tacosRecipe.addIngredient( buildIngredient("Salt", ".5", teapoonUom));
+        tacosRecipe.addIngredient( buildIngredient("Clove of Garlic, Choppedr", "1", eachUom));
+        tacosRecipe.addIngredient( buildIngredient("finely grated orange zestr", "1", tableSpoonUom));
+        tacosRecipe.addIngredient( buildIngredient("fresh-squeezed orange juice", "3", tableSpoonUom));
+        tacosRecipe.addIngredient( buildIngredient("Olive Oil", "2", tableSpoonUom));
+        tacosRecipe.addIngredient( buildIngredient("boneless chicken thighs", "4", tableSpoonUom));
+        tacosRecipe.addIngredient( buildIngredient("small corn tortillasr", "8", eachUom));
+        tacosRecipe.addIngredient( buildIngredient("packed baby arugula", "3", cupsUom));
+        tacosRecipe.addIngredient( buildIngredient("medium ripe avocados, slic", "2", eachUom));
+        tacosRecipe.addIngredient( buildIngredient("radishes, thinly sliced", "4", eachUom));
+        tacosRecipe.addIngredient( buildIngredient("cherry tomatoes, halved", ".5", pintUom));
+        tacosRecipe.addIngredient( buildIngredient("red onion, thinly sliced", ".25", eachUom));
+        tacosRecipe.addIngredient( buildIngredient("Roughly chopped cilantro", "4", eachUom));
+        tacosRecipe.addIngredient( buildIngredient("cup sour cream thinned with 1/4 cup milk", "4", cupsUom));
+        tacosRecipe.addIngredient( buildIngredient("lime, cut into wedges", "4", eachUom));
 
         tacosRecipe.getCategories().add(americanCategory);
         tacosRecipe.getCategories().add(mexicanCategory);

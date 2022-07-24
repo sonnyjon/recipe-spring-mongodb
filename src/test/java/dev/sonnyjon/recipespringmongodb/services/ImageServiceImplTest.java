@@ -10,7 +10,6 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.mock.web.MockMultipartFile;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -24,7 +23,6 @@ import static org.mockito.Mockito.*;
  * Created by Sonny on 7/11/2022.
  */
 @ExtendWith(SpringExtension.class)
-@ActiveProfiles(profiles = {"test"})
 class ImageServiceImplTest
 {
     public static final String RECIPE_ID = "RECIPE-1";

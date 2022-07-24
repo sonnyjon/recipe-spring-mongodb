@@ -2,14 +2,12 @@ package dev.sonnyjon.recipespringmongodb.model;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.test.context.ActiveProfiles;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Created by Sonny on 7/7/2022.
  */
-@ActiveProfiles(profiles = {"test"})
 class RecipeTest
 {
     static final String RECIPE_ID = "RECIPE-1";
