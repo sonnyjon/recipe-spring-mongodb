@@ -3,12 +3,11 @@ package dev.sonnyjon.recipespringmongodb.model;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
-import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.math.BigDecimal;
 import java.util.Objects;
+import java.util.UUID;
 
 /**
  * Created by Sonny on 7/7/2022.
@@ -16,11 +15,9 @@ import java.util.Objects;
 @Getter
 @Setter
 @NoArgsConstructor
-@Document("ingredient")
 public class Ingredient
 {
-    @Id
-    private String id;
+    private String id = UUID.randomUUID().toString();
     private String description;
     private BigDecimal amount;
     @DBRef

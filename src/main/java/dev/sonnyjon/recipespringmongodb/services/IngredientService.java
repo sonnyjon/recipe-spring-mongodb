@@ -7,7 +7,7 @@ import dev.sonnyjon.recipespringmongodb.dto.IngredientDto;
  */
 public interface IngredientService
 {
-    IngredientDto findByRecipe(String recipeId, String ingredientId);
+    IngredientDto findInRecipe(String recipeId, String ingredientId);
     IngredientDto saveIngredient(String recipeId, IngredientDto dto);
     void removeIngredient(String recipeId, String ingredientId);
 }

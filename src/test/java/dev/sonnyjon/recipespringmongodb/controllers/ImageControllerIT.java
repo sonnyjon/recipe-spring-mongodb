@@ -28,7 +28,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * Created by Sonny on 7/14/2022.
  */
 @ExtendWith(MockitoExtension.class)
-class ImageControllerTest
+class ImageControllerIT
 {
     @Mock
     ImageService imageService;

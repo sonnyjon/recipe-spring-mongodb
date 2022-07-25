@@ -30,7 +30,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * Created by Sonny on 7/15/2022.
  */
 @ExtendWith(MockitoExtension.class)
-class IngredientControllerTest
+class IngredientControllerIT
 {
     @Mock
     UnitOfMeasureService unitOfMeasureService;
@@ -115,7 +115,7 @@ class IngredientControllerTest
         IngredientDto ingredient = new IngredientDto();
         ingredient.setId( INGRED_ID );
 
-        when(ingredientService.findByRecipe( RECIPE_ID, INGRED_ID )).thenReturn( ingredient );
+        when(ingredientService.findInRecipe( RECIPE_ID, INGRED_ID )).thenReturn( ingredient );
 
         // when, then
         mockMvc.perform(get( TEST_URI ))
@@ -123,7 +123,7 @@ class IngredientControllerTest
                 .andExpect(model().attributeExists("ingredient"))
                 .andExpect(forwardedUrl( EXPECTED_RETURN ));
 
-        verify(ingredientService, times(1)).findByRecipe(anyString(), anyString());
+        verify(ingredientService, times(1)).findInRecipe(anyString(), anyString());
     }
 
     @Test
@@ -134,14 +134,14 @@ class IngredientControllerTest
         final String TEST_URI = String.format("/recipe/%1$s/ingredient/%2$s/show", RECIPE_ID, INGRED_ID);
 
         // given
-        when(ingredientService.findByRecipe( RECIPE_ID, INGRED_ID )).thenThrow(NotFoundException.class);
+        when(ingredientService.findInRecipe( RECIPE_ID, INGRED_ID )).thenThrow(NotFoundException.class);
 
         // when, then
         mockMvc.perform(get( TEST_URI ))
                 .andExpect(status().isNotFound())
                 .andExpect(result -> assertTrue(result.getResolvedException() instanceof NotFoundException));
 
-        verify(ingredientService, times(1)).findByRecipe(anyString(), anyString());
+        verify(ingredientService, times(1)).findInRecipe(anyString(), anyString());
     }
 
     @Test
@@ -201,7 +201,7 @@ class IngredientControllerTest
         IngredientDto ingredient = new IngredientDto();
         ingredient.setId( INGRED_ID );
 
-        when(ingredientService.findByRecipe( RECIPE_ID, INGRED_ID )).thenReturn( ingredient );
+        when(ingredientService.findInRecipe( RECIPE_ID, INGRED_ID )).thenReturn( ingredient );
         when(unitOfMeasureService.listAllUoms()).thenReturn( new HashSet<>() );
 
         // when, then
@@ -211,7 +211,7 @@ class IngredientControllerTest
                 .andExpect(model().attributeExists("uomList"))
                 .andExpect(forwardedUrl( EXPECTED_RETURN ));
 
-        verify(ingredientService, times(1)).findByRecipe(anyString(), anyString());
+        verify(ingredientService, times(1)).findInRecipe(anyString(), anyString());
         verify(unitOfMeasureService, times(1)).listAllUoms();
     }
 
@@ -223,7 +223,7 @@ class IngredientControllerTest
         final String TEST_URI = String.format("/recipe/%1$s/ingredient/%2$s/update", RECIPE_ID, INGRED_ID);
 
         // given
-        when(ingredientService.findByRecipe( RECIPE_ID, INGRED_ID )).thenThrow(NotFoundException.class);
+        when(ingredientService.findInRecipe( RECIPE_ID, INGRED_ID )).thenThrow(NotFoundException.class);
 
         // when, then
         mockMvc.perform(get( TEST_URI ))
@@ -232,7 +232,7 @@ class IngredientControllerTest
                     result -> assertTrue(result.getResolvedException() instanceof NotFoundException)
                 );
 
-        verify(ingredientService, times(1)).findByRecipe(anyString(), anyString());
+        verify(ingredientService, times(1)).findInRecipe(anyString(), anyString());
     }
 
     // TODO Not working. Debug this once resources are in place

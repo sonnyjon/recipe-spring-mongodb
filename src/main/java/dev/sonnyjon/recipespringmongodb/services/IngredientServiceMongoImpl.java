@@ -6,7 +6,6 @@ import dev.sonnyjon.recipespringmongodb.dto.IngredientDto;
 import dev.sonnyjon.recipespringmongodb.exceptions.NotFoundException;
 import dev.sonnyjon.recipespringmongodb.model.Ingredient;
 import dev.sonnyjon.recipespringmongodb.model.Recipe;
-import dev.sonnyjon.recipespringmongodb.repositories.IngredientRepository;
 import dev.sonnyjon.recipespringmongodb.repositories.RecipeRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -19,22 +18,20 @@ import org.springframework.transaction.annotation.Transactional;
 @Service("ingredientService")
 public class IngredientServiceMongoImpl implements IngredientService
 {
-    private final IngredientRepository ingredientRepository;
     private final RecipeRepository recipeRepository;
     private final IngredientConverter converter = new IngredientConverter();
     private final UnitOfMeasureConverter uomConverter = new UnitOfMeasureConverter();
 
-    public IngredientServiceMongoImpl(IngredientRepository ingredientRepository, RecipeRepository recipeRepository)
+    public IngredientServiceMongoImpl(RecipeRepository recipeRepository)
     {
-        this.ingredientRepository = ingredientRepository;
         this.recipeRepository = recipeRepository;
     }
 
     @Override
-    public IngredientDto findByRecipe(String recipeId, String ingredientId)
+    public IngredientDto findInRecipe(String recipeId, String ingredientId)
     {
-        findRecipeForIngredient( ingredientId );
-        return converter.convertEntity(findIngredient( ingredientId ));
+        Recipe recipe = findRecipeForIngredient( ingredientId );
+        return converter.convertEntity(findIngredient( recipe, ingredientId ));
     }
 
     @Override
@@ -45,8 +42,8 @@ public class IngredientServiceMongoImpl implements IngredientService
         Ingredient savedIngredient;
 
         try {
-            findRecipeForIngredient( dto.getId() );
-            savedIngredient = updateExisting( dto );
+            recipe = findRecipeForIngredient( dto.getId() );
+            savedIngredient = updateExisting( dto, recipe );
         }
         catch (NotFoundException e)
         {
@@ -74,17 +71,16 @@ public class IngredientServiceMongoImpl implements IngredientService
             throw new NotFoundException( msg );
         }
 
-        Ingredient ingredient = findIngredient( ingredientId );
+        Ingredient ingredient = findIngredient( recipe, ingredientId );
         recipe.getIngredients().remove( ingredient );
 
         recipeRepository.save( recipe );
-        ingredientRepository.delete( ingredient );
     }
 
     //==================================================================================================================
     private Recipe findRecipeForIngredient(String ingredientId)
     {
-        Recipe recipe = recipeRepository.findByIngredientId( ingredientId );
+        Recipe recipe = recipeRepository.findByIngredientId( ingredientId ).get(0);
 
         if (recipe == null)
             throw new NotFoundException("Recipe not found for Ingredient ID=" + ingredientId);
@@ -100,37 +96,46 @@ public class IngredientServiceMongoImpl implements IngredientService
                                 );
     }
 
-    private Ingredient findIngredient(String ingredientId)
+    private Ingredient findIngredient(Recipe recipe, String ingredientId)
     {
-        return ingredientRepository.findById( ingredientId )
-                                    .orElseThrow(
-                                        () -> new NotFoundException("Ingredient not found. ID: " + ingredientId)
-                                    );
+        return recipe.getIngredients()
+                        .stream()
+                        .filter(
+                            ingredient -> ingredient.getId().equals( ingredientId )
+                        )
+                        .findFirst()
+                        .orElseThrow(
+                            ()-> new NotFoundException("Ingredient not found. ID: " + ingredientId)
+                        );
+    }
+
+    private Ingredient findIngredientByDescription(Recipe recipe, String ingredientDesc)
+    {
+        return recipe.getIngredients()
+                        .stream()
+                        .filter(
+                            ingredient -> ingredient.getDescription().equals( ingredientDesc )
+                        )
+                        .findFirst()
+                        .orElseThrow(
+                            ()-> new NotFoundException("Ingredient not found. DESC: " + ingredientDesc)
+                        );
     }
 
     private Ingredient saveNew(IngredientDto newIngredient, Recipe recipe)
     {
-        Ingredient ingredient = new Ingredient();
-        ingredient.setDescription( newIngredient.getDescription() );
-        ingredient.setAmount( newIngredient.getAmount() );
-        ingredient.setUom(uomConverter.convertDto( newIngredient.getUom() ));
+        Ingredient ingredient = converter.convertDto( newIngredient );
+        recipe.addIngredient( ingredient );
+        Recipe savedRecipe = recipeRepository.save( recipe );
 
-        Ingredient saved = ingredientRepository.save( ingredient );
-
-        recipe.addIngredient( saved );
-        recipeRepository.save( recipe );
-
-        return saved;
+        return findIngredientByDescription( savedRecipe, ingredient.getDescription() );
     }
 
-    private Ingredient updateExisting(IngredientDto existing)
+    private Ingredient updateExisting(IngredientDto existing, Recipe recipe)
     {
-        Ingredient ingredient = new Ingredient();
-        ingredient.setId( existing.getId() );
-        ingredient.setDescription( existing.getDescription() );
-        ingredient.setAmount( existing.getAmount() );
-        ingredient.setUom(uomConverter.convertDto( existing.getUom() ));
+        Ingredient ingredient = converter.convertDto( existing );
+        Recipe savedRecipe = recipeRepository.save( recipe );
 
-        return ingredientRepository.save( ingredient );
+        return findIngredient( savedRecipe, ingredient.getId() );
     }
 }
