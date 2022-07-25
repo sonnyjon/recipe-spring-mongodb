@@ -64,12 +64,10 @@ class IngredientServiceMongoImplTest
     {
         // given
         Recipe testRecipe = getTestRecipeWithTwoIngredients();
-        List<Recipe> recipes = new ArrayList<>();
-        recipes.add( testRecipe );
-
+        Optional<Recipe> optional = Optional.of( testRecipe );
         Ingredient testIngredient = getTestIngredient( INGRED1_ID, INGRED1_DESC );
 
-        when(recipeRepository.findByIngredientId(anyString())).thenReturn( recipes );
+        when(recipeRepository.findById(anyString())).thenReturn( optional );
 
         // when
         IngredientDto expected = converter.convertEntity( testIngredient );
@@ -80,7 +78,7 @@ class IngredientServiceMongoImplTest
         assertEquals( expected.getAmount(), actual.getAmount() );
         assertEquals( expected.getUom().getId(), actual.getUom().getId() );
 
-        verify(recipeRepository, times(1)).findByIngredientId(any());
+        verify(recipeRepository, times(1)).findById(any());
     }
 
     @Test
@@ -111,7 +109,6 @@ class IngredientServiceMongoImplTest
         Ingredient expectedIngredient = getTestIngredient( INGRED1_ID, INGRED1_DESC );
         IngredientDto testIngredient = converter.convertEntity( expectedIngredient );
 
-        when(recipeRepository.findByIngredientId(anyString())).thenThrow( NotFoundException.class );
         when(recipeRepository.findById(anyString())).thenReturn( recipeOptional );
         when(recipeRepository.save(any())).thenReturn( expectedRecipe );
 
@@ -120,7 +117,6 @@ class IngredientServiceMongoImplTest
 
         // then
         assertNotNull( actualDto.getId() );
-        verify(recipeRepository, times(1)).findByIngredientId(anyString());
         verify(recipeRepository, times(1)).findById(anyString());
         verify(recipeRepository, times(1)).save(any());
     }
@@ -130,8 +126,9 @@ class IngredientServiceMongoImplTest
     {
         // given
         Ingredient expectedIngredient = getTestIngredient( INGRED1_ID, "CHANGED" );
-
         Recipe testRecipe = getTestRecipeWithOneIngredient();
+        Optional<Recipe> optional = Optional.of( testRecipe );
+
         Recipe expectedRecipe = getTestRecipeWithOneIngredient();
         expectedRecipe.getIngredients().clear();
         expectedRecipe.addIngredient( expectedIngredient );
@@ -141,7 +138,7 @@ class IngredientServiceMongoImplTest
 
         IngredientDto testIngredient = converter.convertEntity( expectedIngredient );
 
-        when(recipeRepository.findByIngredientId(anyString())).thenReturn( recipes );
+        when(recipeRepository.findById(anyString())).thenReturn( optional );
         when(recipeRepository.save(any())).thenReturn( expectedRecipe );
 
         // when
@@ -150,8 +147,7 @@ class IngredientServiceMongoImplTest
         // then
         assertEquals( expectedIngredient.getId(), actualDto.getId() );
         assertEquals( "CHANGED", actualDto.getDescription() );
-        verify(recipeRepository, times(1)).findByIngredientId(anyString());
-        verify(recipeRepository, times(0)).findById(anyString());
+        verify(recipeRepository, times(1)).findById(anyString());
         verify(recipeRepository, times(1)).save(any());
     }
 
@@ -163,7 +159,6 @@ class IngredientServiceMongoImplTest
         Ingredient expected = getTestIngredient( INGRED1_ID, INGRED1_DESC );
         IngredientDto testIngredient = converter.convertEntity( expected );
 
-        when(recipeRepository.findByIngredientId(anyString())).thenThrow( NotFoundException.class );
         when(recipeRepository.findById(anyString())).thenThrow( NotFoundException.class );
 
         // when
@@ -171,7 +166,6 @@ class IngredientServiceMongoImplTest
 
         // then
         assertThrows( NotFoundException.class, executable );
-        verify(recipeRepository, times(1)).findByIngredientId(anyString());
         verify(recipeRepository, times(1)).findById(anyString());
     }
 
@@ -181,19 +175,18 @@ class IngredientServiceMongoImplTest
         // given
         Recipe testRecipe = getTestRecipeWithTwoIngredients();
         Recipe expectedRecipe = getTestRecipeWithOneIngredient();
-        List<Recipe> recipes = new ArrayList<>();
-        recipes.add( testRecipe );
+        Optional<Recipe> optionalRecipe = Optional.of( testRecipe );
 
         Ingredient testIngredient = getTestIngredient( INGRED2_ID, INGRED2_DESC );
 
-        when(recipeRepository.findByIngredientId(anyString())).thenReturn( recipes );
+        when(recipeRepository.findById(anyString())).thenReturn( optionalRecipe );
         when(recipeRepository.save(any())).thenReturn( expectedRecipe );
 
         // when
         ingredientService.removeIngredient( testRecipe.getId(), testIngredient.getId() );
 
         // then
-        verify(recipeRepository, times(1)).findByIngredientId(anyString());
+        verify(recipeRepository, times(1)).findById(anyString());
         verify(recipeRepository, times(1)).save(any());
     }
 

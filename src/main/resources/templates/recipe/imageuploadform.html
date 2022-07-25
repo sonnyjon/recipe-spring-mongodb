@@ -10,11 +10,11 @@
           th:href="@{/webjars/bootstrap/3.3.7/css/bootstrap.min.css}">
 </head>
 <body>
-<!--/*@thymesVar id="recipe" type="guru.springframework.domain.Recipe"*/-->
+<!--/*@thymesVar id="recipe" type="dev.sonnyjon.recipespringmongodb.model.Recipe"*/-->
 <div class="container-fluid" style="margin-top: 20px">
     <div class="row">
         <div class="col-md-6 col-md-offset-3">
-            <div class="pannel-group">
+            <div class="panel-group">
                 <div class="panel panel-primary">
                     <div class="panel-heading">
                         <h1 class="panel-title">Upload a new recipe image</h1>
@@ -22,7 +22,7 @@
                     <div class="panel-body">
                         <div class="row">
                             <div class="col-md-5">
-                                <form  action="http:\\localhost" method="post" enctype="multipart/form-data"
+                                <form  action="http://localhost" method="post" enctype="multipart/form-data"
                                        th:action="@{'/recipe/' + ${recipe.getId()} + '/image'}">
                                     <label class="control-label">Select File</label>
                                     <input id="imagefile" name="imagefile" type="file" class="file">

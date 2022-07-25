@@ -4,7 +4,9 @@ import dev.sonnyjon.recipespringmongodb.dto.CategoryDto;
 import dev.sonnyjon.recipespringmongodb.model.Category;
 import lombok.Synchronized;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -13,18 +15,18 @@ import java.util.Set;
 public class CategoryConverter implements DualConverter<Category, CategoryDto>
 {
     @Synchronized
-    public Set<CategoryDto> convertEntities(Set<Category> entities)
+    public List<CategoryDto> convertEntities(Set<Category> entities)
     {
         if (entities == null) return null;
 
-        final Set<CategoryDto> dtos = new HashSet<>();
+        final List<CategoryDto> dtos = new ArrayList<>();
         entities.forEach((Category entity) -> dtos.add(convertEntity(entity)));
 
         return dtos;
     }
 
     @Synchronized
-    public Set<Category> convertDtos(Set<CategoryDto> dtos)
+    public Set<Category> convertDtos(List<CategoryDto> dtos)
     {
         if (dtos == null) return null;
 

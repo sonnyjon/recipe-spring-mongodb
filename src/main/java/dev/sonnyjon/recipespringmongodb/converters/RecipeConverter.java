@@ -20,19 +20,19 @@ public class RecipeConverter implements DualConverter<Recipe, RecipeDto>
         if (entity == null) return null;
 
         final RecipeDto dto = new RecipeDto();
-        dto.setId(entity.getId());
-        dto.setDescription(entity.getDescription());
-        dto.setPrepTime(entity.getPrepTime());
-        dto.setCookTime(entity.getCookTime());
-        dto.setServings(entity.getServings());
-        dto.setSource(entity.getSource());
-        dto.setUrl(entity.getUrl());
-        dto.setDirections(entity.getDirections());
-        dto.setIngredients(ingredConverter.convertEntities(entity.getIngredients()));
-        dto.setImage(entity.getImage());
-        dto.setDifficulty(entity.getDifficulty());
-        dto.setNotes(notesConverter.convertEntity(entity.getNotes()));
-        dto.setCategories(catConverter.convertEntities(entity.getCategories()));
+        dto.setId( entity.getId() );
+        dto.setDescription( entity.getDescription() );
+        dto.setPrepTime( entity.getPrepTime() );
+        dto.setCookTime( entity.getCookTime() );
+        dto.setServings( entity.getServings() );
+        dto.setSource( entity.getSource() );
+        dto.setUrl( entity.getUrl() );
+        dto.setDirections( entity.getDirections() );
+        dto.setIngredients(ingredConverter.convertEntities( entity.getIngredients() ));
+        dto.setImage( entity.getImage() );
+        dto.setDifficulty( entity.getDifficulty() );
+        dto.setNotes(notesConverter.convertEntity(entity.getNotes() ));
+        dto.setCategories(catConverter.convertEntities( entity.getCategories() ));
 
         return dto;
     }
@@ -44,19 +44,19 @@ public class RecipeConverter implements DualConverter<Recipe, RecipeDto>
         if (dto == null) return null;
 
         final Recipe entity = new Recipe();
-        entity.setId(dto.getId());
-        entity.setDescription(dto.getDescription());
-        entity.setPrepTime(dto.getPrepTime());
-        entity.setCookTime(dto.getCookTime());
-        entity.setServings(dto.getServings());
-        entity.setSource(dto.getSource());
-        entity.setUrl(dto.getUrl());
-        entity.setDirections(dto.getDirections());
-        entity.setIngredients(ingredConverter.convertDtos(dto.getIngredients()));
-        entity.setImage(dto.getImage());
-        entity.setDifficulty(dto.getDifficulty());
-        entity.setNotes(notesConverter.convertDto(dto.getNotes()));
-        entity.setCategories(catConverter.convertDtos(dto.getCategories()));
+        entity.setId( dto.getId() );
+        entity.setDescription( dto.getDescription() );
+        entity.setPrepTime( dto.getPrepTime() );
+        entity.setCookTime( dto.getCookTime() );
+        entity.setServings( dto.getServings() );
+        entity.setSource( dto.getSource() );
+        entity.setUrl( dto.getUrl() );
+        entity.setDirections( dto.getDirections() );
+        entity.setIngredients(ingredConverter.convertDtos( dto.getIngredients() ));
+        entity.setImage( dto.getImage() );
+        entity.setDifficulty( dto.getDifficulty() );
+        entity.setNotes(notesConverter.convertDto( dto.getNotes() ));
+        entity.setCategories(catConverter.convertDtos( dto.getCategories() ));
 
         return entity;
     }

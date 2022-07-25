@@ -45,6 +45,8 @@ public class IngredientController
     @GetMapping("/recipe/{recipeId}/ingredient/{id}/show")
     public String showRecipeIngredient(@PathVariable String recipeId, @PathVariable String id, Model model)
     {
+        log.debug("Showing ingredients for ingredient id: " + id);
+
         model.addAttribute("ingredient", ingredientService.findInRecipe(recipeId, id));
         return "recipe/ingredient/show";
     }
@@ -59,8 +61,9 @@ public class IngredientController
         IngredientDto ingredientDto = new IngredientDto();
         ingredientDto.setUom(new UnitOfMeasureDto());
 
-        model.addAttribute("ingredient", ingredientDto);
-        model.addAttribute("uomList",  unitOfMeasureService.listAllUoms());
+        model.addAttribute( "recipeId", recipeId );
+        model.addAttribute( "ingredient", ingredientDto );
+        model.addAttribute( "uomList",  unitOfMeasureService.listAllUoms() );
 
         return "recipe/ingredient/ingredientform";
     }

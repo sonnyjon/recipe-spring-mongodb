@@ -6,7 +6,9 @@ import dev.sonnyjon.recipespringmongodb.model.Ingredient;
 import dev.sonnyjon.recipespringmongodb.model.UnitOfMeasure;
 import lombok.Synchronized;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -18,18 +20,18 @@ public class IngredientConverter implements DualConverter<Ingredient, Ingredient
 
 
     @Synchronized
-    public Set<IngredientDto> convertEntities(Set<Ingredient> entities)
+    public List<IngredientDto> convertEntities(Set<Ingredient> entities)
     {
         if (entities == null) return null;
 
-        final Set<IngredientDto> dtos = new HashSet<>();
+        final List<IngredientDto> dtos = new ArrayList<>();
         entities.forEach((Ingredient entity) -> dtos.add(convertEntity(entity)));
 
         return dtos;
     }
 
     @Synchronized
-    public Set<Ingredient> convertDtos(Set<IngredientDto> dtos)
+    public Set<Ingredient> convertDtos(List<IngredientDto> dtos)
     {
         if (dtos == null) return null;
 

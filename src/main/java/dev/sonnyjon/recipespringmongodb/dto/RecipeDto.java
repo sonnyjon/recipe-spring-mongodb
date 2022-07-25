@@ -5,8 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Sonny on 7/8/2022.
@@ -24,9 +24,9 @@ public class RecipeDto
     private String source;
     private String url;
     private String directions;
-    private Set<IngredientDto> ingredients = new HashSet<>();
+    private List<IngredientDto> ingredients = new ArrayList<>();
     private Byte[] image;
     private Difficulty difficulty;
     private NotesDto notes;
-    private Set<CategoryDto> categories = new HashSet<>();
+    private List<CategoryDto> categories = new ArrayList<>();
 }
