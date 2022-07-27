@@ -1,4 +1,5 @@
 plugins {
+    id 'com.sourcemuse.mongo' version '1.0.7'
     id 'org.springframework.boot' version '2.7.1'
     id 'io.spring.dependency-management' version '1.0.11.RELEASE'
     id 'java'
@@ -34,8 +35,12 @@ dependencies {
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'de.flapdoodle.embed:de.flapdoodle.embed.mongo:3.4.6'
     testRuntimeOnly  'org.junit.jupiter:junit-jupiter-engine:5.8.2'
-    testRuntimeOnly 'de.flapdoodle.embed:de.flapdoodle.embed.mongo:3.4.6'
+}
+
+task integrationTest(type: Test) {
+    runWithMongoDb = true
 }
 
 tasks.named('test') {
